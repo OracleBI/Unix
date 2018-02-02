@@ -62,9 +62,47 @@ For your information port 8080 is the default port for Apache Tomcat.
 Step 3:Download Jenkins war File
 Change to root user and runn below command to download jenkins war file
 wget http://updates.jenkins-ci.org/download/war/2.7.3/jenkins.war
-mv ~jenkins.war /home/tomcat
+mv /root/jenkins.war /home/tomcat
 chown tomcat:tomcat /home/tomcat/jenkins.war
 chmod u+x /home/tomcat/jenkins.war
+
+Step 4: Deploy Jenkins war File 
+To deploy Jenkins war file that you have downloaded in the previous step, open your browser and access localhost:8080 again. Now click on the Manager App.
+
+Note: If you get access denied error do the following:
+Commenting the Valve attribute in CATALINA_HOME/webapps/manager/META-INF/context.xml and restarting Tomcat solve the problem and I can now assess the web manager.shutdown and startup tomcat again.
+
+When you click on the Manager app, it will ask for username and password. If you remember I have given one single username and password for all the roles i.e. edureka. Type the below mentioned username and password and click OK.
+Now you will be directed to  Tomcat web application manager page. When you scroll down you will find an option called Deploy. Over here you need to give the context path, i.e. /jenkins and directory URL, i.e. location of the Jenkins war file in your system in my case it is /home/edureka/jenkins.war and finally click on Deploy.
+
+Login to URL and Under Deploy section:
+Context Path (required): /Jenkins
+XML Configuration file URL:
+WAR or Directory URL: /home/tomcat/jenkins.war
+Now in the Tomcat web application manager page you can find Jenkins listed under Applications along with other web apps.
+
+Now I will click on “/jenkins”.You will be redireccted to Jenkins page.
+When I clicked on jenkins I was directed to Unlock Jenkins page.
+================================================================================================================================
+Unlock Jenkins
+
+To ensure Jenkins is securely set up by the administrator, a password has been written to the log (not sure where to find it?) and this file on the server:
+
+/home/tomcat/.jenkins/secrets/initialAdminPassword
+
+Please copy the password from either location and paste it below.
+
+================================================================================================================================
+Just copy this password and paste it in the Administrator password text-box in the Unlock Jenkins page
+Once you have pasted the password, click on continue.
+Now I will install plugins.I will go with Install Suggested Plugins.
+Once the plugins are installed, you will be directed to a page where you have to Create First Admin User. Please fill your relevant details.After filling this form, click on save and finish.
+Jenkins is ready now, once you click on start using Jenkins you will be directed to Jenkins dashboard. You can now use Jenkins to continuously trigger build and test for every change made in the source code.
+
+
+
+
+Step 5: Install Suggested Plugins
 
 Setup a Systemd unit file for Apache Tomcat
 As a matter of convenience, you should setup a Systemd unit file for Apache Tomcat:
