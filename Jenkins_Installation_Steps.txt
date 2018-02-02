@@ -1,0 +1,105 @@
+Step 1: Install Java Version 8
+sudo yum install java-1.8.0-openjdk.x86_64
+
+
+Step 2: Install Apache Tomcat 9
+install wget in not present
+sudo yum install wget
+
+Download tar file for Tomcat using below command:
+change user to root
+wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.0.M10/bin/apache-tomcat-9.0.0.M10.tar.gz
+sudo groupadd tomcat
+sudo mkdir /opt/tomcat
+sudo useradd -g tomcat  tomcat
+sudo chown tomcat:tomcat tomcat/
+sudo tar -zxvf ~/apache-tomcat-9.0.0.M10.tar.gz -C /opt/tomcat --strip-components=1
+
+Setup proper permissions
+cd /opt/tomcat
+sudo chgrp -R tomcat conf
+sudo chmod g+rwx conf
+sudo chmod g+r conf/ *
+sudo chown -R tomcat logs/ temp/ webapps/ work/
+sudo chgrp -R tomcat bin
+sudo chgrp -R tomcat lib
+sudo chmod g+rwx bin
+sudo chmod g+r bin/ *
+cd /opt
+sudo chown -R tomcat:tomcat tomcat/
+
+sudo su - tomcat
+cd /opt/tomcat/conf
+vi tomcat-users.xml
+Now delete the content of the tomcat-users.xml file. Copy the below block and paste it in tomcat-users.xml file
+<?xml version='1.0' encoding='utf-8'?>
+<tomcat-users>
+    <role rolename="manager-gui"/>
+    <role rolename="manager-script"/>
+    <role rolename="manager-jmx"/>
+    <role rolename="manager-jmx"/>
+    <role rolename="admin-gui"/>
+    <role rolename="admin-script"/>
+    <user username="edureka" password="edureka" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-gui,admin-script"/>
+</tomcat-users>
+
+Start tomcat
+cd /opt/tomcat/bin
+[tomcat@localhost bin]$ ./startup.sh
+Using CATALINA_BASE:   /opt/tomcat
+Using CATALINA_HOME:   /opt/tomcat
+Using CATALINA_TMPDIR: /opt/tomcat/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/tomcat/bin/bootstrap.jar:/opt/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+[tomcat@localhost bin]$
+
+So, Tomcat has now started.
+Now open your browser and access http://localhost:8080 to confirm that Tomcat is up and running.
+For your information port 8080 is the default port for Apache Tomcat.
+
+
+Step 3:Download Jenkins war File
+Change to root user and runn below command to download jenkins war file
+wget http://updates.jenkins-ci.org/download/war/2.7.3/jenkins.war
+mv ~jenkins.war /home/tomcat
+chown tomcat:tomcat /home/tomcat/jenkins.war
+chmod u+x /home/tomcat/jenkins.war
+
+Setup a Systemd unit file for Apache Tomcat
+As a matter of convenience, you should setup a Systemd unit file for Apache Tomcat:
+
+sudo vi /etc/systemd/system/tomcat.service
+Populate the file with:
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/jre
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/bin/kill -15 $MAINPID
+
+User=tomcat
+Group=tomcat
+
+[Install]
+WantedBy=multi-user.target
+
+Save and quit:
+:wq
+
+
+
+
+
+
+
