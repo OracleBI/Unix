@@ -1,0 +1,4 @@
+$ string='"one", "two", "three"'
+$ QT=${string//[^\"]/}
+$ echo ${#QT}
+6
