@@ -2,3 +2,15 @@ $ string='"one", "two", "three"'
 $ QT=${string//[^\"]/}
 $ echo ${#QT}
 6
+
+
+
+
+
+Check if varibale has numbers:
+var=123
+if echo $var | egrep -q '^[0-9]+$'; then
+    echo " $var is a number"
+else
+    echo " $var is not a number"
+fi
