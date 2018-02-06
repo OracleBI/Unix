@@ -1,0 +1,15 @@
+a=$(echo "aaa bbbb cccc"   )
+set -- $a
+while [ $# -gt 0 ]
+do
+        echo "var=$1"
+        shift
+done
+
+
+
+####################
+#output
+var=aaa
+var=bbbb
+var=cccc
