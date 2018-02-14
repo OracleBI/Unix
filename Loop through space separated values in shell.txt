@@ -13,3 +13,28 @@ done
 var=aaa
 var=bbbb
 var=cccc
+
+
+
+#########################################
+Loop for comma separated values:
+#########################################
+user=$Schema
+stractuser=$user
+strremuser=$user
+replacevalue=0
+strremuser=${strremuser#*,}
+stractuser=${stractuser%%,*}
+while [ ${#stractuser} != 0 ]
+do
+arruser[replacevalue]="AWS735859_$stractuser"
+stractuser=$strremuser
+strremuser=${strremuser#*,}
+stractuser=${stractuser%%,*}
+echo "${arruser[replacevalue]}"
+if [ ${arruser[replacevalue]} = "AWS735859_${user##*,}" ]
+then
+break
+fi
+replacevalue=$replacevalue+1
+done
